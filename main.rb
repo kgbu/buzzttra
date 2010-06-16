@@ -3,18 +3,28 @@ require 'sinatra'
 require 'oauthclient'
 require 'zlib'
 require 'stringio'
+require 'json'
 
 configure do
-  Consumer_key = "www.jin.gr.jp" 
-  Consumer_secret = "1wsMBGB+QjfwFWFfbG4I/Se5"
 
+  # constants
+  #
   Scope = 'https://www.googleapis.com/auth/buzz'
   Request_token_url = 'https://www.google.com/accounts/OAuthGetRequestToken'
   Access_token_url = 'https://www.google.com/accounts/OAuthGetAccessToken'
   Callback = 'http://www.jin.gr.jp/buzztra/access_token'
+  APIbaseURL = 'https://www.googleapis.com/buzz/v1'
 
+  # site specific info.
+  # To register your site, visit https://www.google.com/accounts/ManageDomains
+  # See http://code.google.com/intl/ja/apis/accounts/docs/RegistrationForWebAppsAuto.html
+
+  require './site_info.rb'
+  #Consumer_key = "your site" 
+  #Consumer_secret = "himitsu"
 
   # Session
+  #
   use Rack::Session::Cookie,
     #:key => 'rack.session',
     :domain => 'jin.gr.jp',
@@ -26,43 +36,35 @@ end
 
 before do
   unless @client
-  @client = OAuthClient.new
-  @client.oauth_config.consumer_key = Consumer_key
-  @client.oauth_config.consumer_secret = Consumer_secret
-  @client.oauth_config.signature_method = 'HMAC-SHA1'
-  @client.oauth_config.http_method = :get
-  @client.debug_dev = STDERR if $DEBUG
+    @client = OAuthClient.new
+    @client.oauth_config.consumer_key = Consumer_key
+    @client.oauth_config.consumer_secret = Consumer_secret
+    @client.oauth_config.signature_method = 'HMAC-SHA1'
+    @client.oauth_config.http_method = :get
+    @client.debug_dev = STDERR if $DEBUG
+  end
+  if session[:access_token] then
+    @client.oauth_config.token = session[:access_token]
+    @client.oauth_config.secret = session[:access_secret]
   end
 end
   
-def base_url
-  default_port = (request.scheme == "http") ? 80 : 443
-  port = (request.port == default_port) ? "" : ":#{request.port.to_s}"
-  "#{request.scheme}://#{request.host}#{port}"
-  "http://www.jin.gr.jp/buzztra"
-end
-
+####################################################
 
 get '/' do
-  erb %{ 
-  <a href="/buzztra/request_token">OAuth Login</a>
-  <a href="/buzztra/activities">Activities</a>
-  }
+  if session[:access_token] then
+    erb :index
+  else
+    erb :login
+  end
 end
 
 get '/login' do
-  "#{base_url} Hello World!"
-end
-
-
-get '/activities' do
-# Access to a protected resource.
-# @consumption requires Buzz API
-content = @client.get_content("https://www.googleapis.com/buzz/v1/activities/@me/@consumption", :alt => :json, :prettyprint => true)
-  erb %{ <%= content %> }
+  erb :login
 end
 
 get '/logout' do
+  erb :login
 end
 
 get '/request_token' do
@@ -83,12 +85,61 @@ end
 
 get '/access_token' do
   token = params[:oauth_token]
-  session[:request_token] = token
   secret = session[:request_token_secret]
   verifier = params[:oauth_verifier]
 
   res = @client.get_access_token(Access_token_url, token, secret, verifier)
-  session[:user_id] = res.oauth_params['user_id']
-  content = @client.get_content("https://www.googleapis.com/buzz/v1/activities/@me/@consumption", :alt => :json, :prettyprint => true)
-  erb %{ <%= p res %> }
+  session[:request_token] = nil
+  session[:access_token] = @client.oauth_config.token
+  session[:access_secret] = @client.oauth_config.secret
+
+  erb %{
+  <a href="/buzztra/activities/">Activities</a>
+  }
 end
+
+
+####################################################
+
+get '/activity/*/@self/*' do
+  @contents = @client.get_content(APIbaseURL +
+    "/activities/" + params[:splat][0] + "/@self/", params[:splat][1],
+    :alt => :json, :prettyprint => true)
+
+  erb :contents
+end
+
+get '/activities/' do
+  @contents = @client.get_content(APIbaseURL + "/activities/@me/@consumption", :alt => :json, :prettyprint => true)
+
+  erb :contents
+end
+
+get '/activities/:name' do |id|
+  if id && id.to_i > 0  then
+    @contents = @client.get_content(APIbaseURL +
+      "/activities/" + id.to_s + "/@public",
+      :alt => :json, :prettyprint => true)
+  end
+
+  erb :contents
+end
+
+get '/search' do
+  @contents = @client.get_content(APIbaseURL + "/search", :alt => :json, :prettyprint => true, :q => params[:q])
+
+  erb :contents
+end
+
+post '/activity' do
+  @client.oauth_config.http_method = :post
+  text =<<__END__
+ { "data": {
+   "object": {
+     "type": "note",
+     "content": #{params[:body]}
+   } } }
+__END__
+  @contents = @client.post_content(APIbaseURL + "/activities/@me/@self", text, :alt => :json, :prettyprint => true)
+end
+

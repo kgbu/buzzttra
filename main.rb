@@ -94,9 +94,7 @@ get '/access_token' do
   session[:access_token] = @client.oauth_config.token
   session[:access_secret] = @client.oauth_config.secret
 
-  erb %{
-  <a href="/buzztra/activities/">Activities</a>
-  }
+  redirect "http://www." + Session_domain + Session_path
 end
 
 
@@ -132,15 +130,15 @@ post '/search' do
   erb :contents
 end
 
-post '/activity' do
+post '/activities' do
   @client.oauth_config.http_method = :post
   text =<<__END__
  { "data": {
    "object": {
      "type": "note",
-     "content": #{params[:body]}
+     "content": "#{params[:body]}"
    } } }
 __END__
-  @contents = @client.post_content(APIbaseURL + "/activities/@me/@self", text, :alt => :json, :prettyprint => true)
+  @contents = @client.post_content(APIbaseURL + "/activities/@me/@self?alt=json", text)
 end
 

@@ -22,13 +22,14 @@ configure do
   require './site_info.rb'
   #Consumer_key = "your site" 
   #Consumer_secret = "himitsu"
+  #Session_domain = "yourdomain"
 
   # Session
   #
   use Rack::Session::Cookie,
     #:key => 'rack.session',
-    :domain => 'jin.gr.jp',
-    :path => '/buzztra',
+    :domain => Session_domain,
+    :path => Session_path,
     :expire_after => 3600,
     :secret => Digest::SHA1.hexdigest(rand.to_s)
 
@@ -125,8 +126,8 @@ get '/activities/:name' do |id|
   erb :contents
 end
 
-get '/search' do
-  @contents = @client.get_content(APIbaseURL + "/search", :alt => :json, :prettyprint => true, :q => params[:q])
+post '/search' do
+  @contents = @client.get_content(APIbaseURL + "/activities/search", :alt => :json, :prettyprint => true, :q => params[:q])
 
   erb :contents
 end

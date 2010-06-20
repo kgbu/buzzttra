@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Gmail</title>
+<title>Buzzttra</title>
 <meta name="application-name" content="Gmail">
 <meta name="description" content="Google&#39;s approach to email">
 <meta name="application-url" content="https://mail.google.com/mail">
@@ -23,9 +23,15 @@ Search:
   <input type="submit" name="SEARCH">
   </form>
 <hr />
-Posting (not working now)
+Posting
   <form action="/buzztra/activities" method=post>
   <textarea name="body" ></textarea>
+  <input type="submit" name="POST">
+  </form>
+<hr />
+Delete Post(not working now)
+  <form action="/buzztra/activities/delete" method=get>
+  ID:<input type="text" name="id">
   <input type="submit" name="POST">
   </form>
 </body>

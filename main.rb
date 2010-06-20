@@ -126,7 +126,7 @@ get '/activities/' do
   erb :contents
 end
 
-get '/activities/:name' do |id|
+get '/activities/get/:name' do |id|
   if id && id.to_i > 0  then
     @contents = @client.get_content(APIbaseURL + "/activities/" + id.to_s + "/@public",
       :alt => :json, :prettyprint => true)

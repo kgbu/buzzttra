@@ -2,37 +2,33 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Buzzttra</title>
-<meta name="application-name" content="Gmail">
-<meta name="description" content="Google&#39;s approach to email">
-<meta name="application-url" content="https://mail.google.com/mail">
-<style>
-body{margin:0;width:100%;height:100%}
-body,td,input,textarea,select{font-family:arial,sans-serif}
-input,textarea,select{font-size:100%}
-</style>
+<title>Buzzttra - minimul Buzz client</title>
+<script type="text/javascript" src="/buzztra/js/prototype.js"></script>
+<script type="text/javascript" src="/buzztra/js/base.js"></script>
+<link rel="stylesheet" type="text/css" href="/buzztra/css/common.css" />
 </head>
-<body >
-  Your <a href="/buzztra/activities/">Activities</a>
-<br />
-note: http://www.jin.gr.jp/buzztra/activities/userID would work
+<body>
+
+
+<div id="contentpane" class="widget"><h2>Contents</h2>
+  <dl id="buzzlist" style="display: none;"></dl>
+  <p id="progress" style="display: none;">Reading buzz&#8230;</p>
+</div>
+
+<form id="addForm" method="get" action="/buzztra/activities/">
+<p><input type="submit" value="Get buzz!" /></p>
+</form>
+
 <hr />
-Search:
   <form action="/buzztra/search" method=post>
   <input type="text" name="q">
-  <input type="submit" name="SEARCH">
+  <input type="submit" name="SEARCH" value="SEARCH">
   </form>
 <hr />
 Posting
   <form action="/buzztra/activities" method=post>
   <textarea name="body" ></textarea>
-  <input type="submit" name="POST">
-  </form>
-<hr />
-Delete Post(not working now)
-  <form action="/buzztra/activities/delete" method=get>
-  ID:<input type="text" name="id">
-  <input type="submit" name="POST">
+  <input type="submit" name="POST" value="POST your activity">
   </form>
 </body>
 </html>

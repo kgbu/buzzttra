@@ -6,8 +6,21 @@
 <link rel="stylesheet" type="text/css" href="css/common.css" />
 </head>
 <body>
+
+
 <div id="contentpane" class="widget"><h2>Contents</h2>
-<a href="/buzztra/">Go</a>
+  <dl id="buzzlist" style="display: none;"></dl>
 </div>
+
+<form id="addForm" method="get" action="/buzztra/activities/">
+  <fieldset>
+    <legend>get buzz</legend>
+    <p><input type="submit" value="Get buzz!" /></p>
+  </fieldset>
+</form>
+
+<hr>
+
+<a href="/buzztra">Go home</a>
+<p id="progress" style="display: none;">Reading buzz&#8230;</p>
 </body>
-</html>

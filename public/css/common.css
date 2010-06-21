@@ -1,31 +1,26 @@
 .widget {
   position: absoute;
   top: 5em;
-  width: 15em;
+  left: 20em;
+  height: 80%;
+  width: 95%;
   border: 0.25em solid gray;
+  border-color: green;
   background: silver;
   padding: 1em 0.5em 0.5em;
   overflow: auto;
 }
 
 .widget h2 {
-  position: absolute;
-  top: 0; left:0; right:0; height: 1.5em;
+  position: relative;
+  top: 0; left:0; 
+  right:0;
+   height: 1.5em;
   font-size: inherit; line-height: 1.5em;
+  color: #9f9;
   margin: 0;
   padding 0 0.2ex;
-  background: gray;
+  background: #080;
   cursor: move;
 }
 
-#contentpane {
-  border-color: green;
-  background: #dfd;
-  left: 20em;
-  height: 10em;
-}
-
-#contentpane h2 {
-  color: #9f9;
-  background: #080;
-}

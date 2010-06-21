@@ -4,6 +4,7 @@ THIS CODE IS FOR LEARNING Sinatra. NOT FOR REAL USE.
 
 TODO:
 
--UI by prototype.js
+-complete UI by prototype.js
 
 -Decide to use or not params[:_method] to emulate DELETE/PUT methods in order to realize RESTful URI design?
+  see "RESTful Web service" section 8.6.3, 8.15

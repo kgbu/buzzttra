@@ -132,7 +132,7 @@ get '/activities/get/:name' do |id|
       :alt => :json, :prettyprint => true)
   end
 
-  erb :contents
+  erb :jscontents
 end
 
 post '/search' do

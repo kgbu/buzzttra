@@ -1,0 +1,29 @@
+<html>
+<head>
+<script type="text/javascript" src="/buzztra/js/prototype.js"></script>
+<script type="text/javascript">
+var jj=<% @contents.each {|a|  %><%= a.to_s %><% } %>;
+var r= Object.toJSON(jj);
+var j=r.evalJSON();
+</script>
+</head>
+<body>
+<dl>
+<script type="text/javascript">
+var ee = j.data.items;
+j.data.items.each(function(e) {
+  var str = "<a href=\"/buzztra/activities/get/" + e.actor.id +
+            "\">" + e.actor.name + "</a>" 
+  document.write("<dt>\n");
+  document.write(str);
+  document.write("</dt>\n");
+  document.write("<dd>\n");
+  document.write(e.object.content);
+  document.write("</dd>\n");
+});
+</script>
+</dl>
+<hr>
+<a href="/buzztra">Go Home</a>
+</body>
+</head>

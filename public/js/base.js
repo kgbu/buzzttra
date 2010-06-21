@@ -1,5 +1,6 @@
 function bindUI() {
   $('addForm').observe('submit', routeToAJAX);
+  $('searchForm').observe('submit', routeToAJAX);
 } // bindUI
 
 
@@ -9,6 +10,7 @@ Ajax.Responders.register({
   },
   onComplete: function(response) {
     if (response._complete) {
+      $('buzzlist').hide();
       var list = $('buzzlist');
       var newlist = new Element('dl', {id: 'buzzlist'});
       var r = response.transport.responseText
@@ -39,7 +41,9 @@ function routeToAJAX(event) {
   event.stop();
   var form = event.element();
   new Ajax.Request( form.action, {
-    method: "get"});
+    method: form.method,
+    parameters: Form.serialize(form)
+  });
 } // routeToAJAX
 
 document.observe('dom:loaded', bindUI);

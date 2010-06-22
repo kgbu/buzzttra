@@ -4,6 +4,23 @@ require 'oauthclient'
 require 'zlib'
 require 'stringio'
 require 'json'
+require 'sequel'
+
+Sequel::Model.plugin(:schema)
+Sequel.connect('sqlite://test.db')
+class Account < Sequel::Model
+  unless table_exists?
+    set_schema do
+      primary_key :id
+      string :username
+      string :token
+      string :secret
+      integer :utc
+      timestamp :created_at
+    end
+    create_table
+  end
+end
 
 configure do
 
@@ -30,7 +47,7 @@ configure do
     #:key => 'rack.session',
     :domain => Session_domain,
     :path => Session_path,
-    :expire_after => 3600,
+    :expire_after => 604800,
     :secret => Digest::SHA1.hexdigest(rand.to_s)
 
 end
@@ -53,6 +70,8 @@ end
 def base_url
   "http://www." + Session_domain + Session_path
 end
+
+
   
 ####################################################
 # authentication
@@ -101,6 +120,40 @@ get '/access_token' do
   session[:access_secret] = @client.oauth_config.secret
 
   redirect base_url
+end
+
+  # for mobile device w/o javascript capability
+  #
+
+post '/issue_mobile_access_token' do
+  begin
+    key = Digest::SHA1.hexdigest(rand.to_s) 
+  end while ( Account[key] ) 
+  Account.insert(:username => key.to_s,
+                 :token => session[:access_token],
+                 :secret => session[:access_secret],
+                 :utc => Time.now().to_i)
+  p "issing key value"
+  p key
+  base_url + '/mobile_access_token/' + key.to_s
+end
+
+get '/mobile_access_token/:name' do |id|
+  fiveminutesago = Time.now().to_i - 600
+  acc = Account.filter(:username => id).filter(:utc > fiveminutesago)
+  Account.filter(:utc < fiveminutesago).delete
+  if (acc) then
+    a = acc.first
+    p "account value dump"
+    p a
+    p session
+    session[:access_token] = a.token
+    session[:access_secret] = a.secret
+    redirect base_url
+  else
+    'nil acc'
+  end
+
 end
 
 

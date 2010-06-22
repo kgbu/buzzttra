@@ -14,6 +14,7 @@ TODO:
 --store user identity data by request (do not store personal info, for usual cases)
 --send one-time(5min TTL) auth-URL by mail
 --give cookie session for auth-URL access
+---add revoke process
 
 -add geo-features
 --search geo-neighborhood activities

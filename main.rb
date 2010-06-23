@@ -45,8 +45,8 @@ configure do
   #
   use Rack::Session::Cookie,
     #:key => 'rack.session',
-    :domain => Session_domain,
-    :path => Session_path,
+    #:domain => Session_domain,
+    #:path => Session_path,
     :expire_after => 604800,
     :secret => Digest::SHA1.hexdigest(rand.to_s)
 
@@ -133,22 +133,19 @@ post '/issue_mobile_access_token' do
                  :token => session[:access_token],
                  :secret => session[:access_secret],
                  :utc => Time.now().to_i)
-  p "issing key value"
-  p key
   base_url + '/mobile_access_token/' + key.to_s
 end
 
 get '/mobile_access_token/:name' do |id|
+
   fiveminutesago = Time.now().to_i - 600
   acc = Account.filter(:username => id).filter(:utc > fiveminutesago)
-  Account.filter(:utc < fiveminutesago).delete
   if (acc) then
     a = acc.first
-    p "account value dump"
-    p a
-    p session
-    session[:access_token] = a.token
-    session[:access_secret] = a.secret
+    session[:access_token] = a[:token]
+    session[:access_secret] = a[:secret]
+    Account.filter(:utc < fiveminutesago).delete
+    Account.filter(:username => id).delete
     redirect base_url
   else
     'nil acc'

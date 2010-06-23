@@ -2,7 +2,13 @@ minimal Buzz client on Sinatra framework
 
 THIS CODE IS FOR LEARNING Sinatra. NOT FOR REAL USE.
 
+MEMO:
+This code can run with Thin. See gem_list.txt
+
 TODO:
+See Issues on github. Below is just for memories.
+
+-use Issues on github : CLOSED
 
 -complete UI by prototype.js
 --comment view

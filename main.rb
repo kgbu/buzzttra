@@ -5,6 +5,7 @@ require 'zlib'
 require 'stringio'
 require 'json'
 require 'sequel'
+require './garakei.rb'
 
 Sequel::Model.plugin(:schema)
 Sequel.connect('sqlite://test.db')
@@ -77,9 +78,15 @@ end
 # authentication
 ####################################################
 
-get '/' do
+get '/', :agent => /^(.*)$/ do
   if session[:access_token] then
-    erb :index
+    if garakei(params[:agent][0]) then
+      @contents = @client.get_content(APIbaseURL + "/activities/@me/@consumption",
+                  :alt => :json, :prettyprint => true)
+      erb :mobile_index
+    else
+      erb :index
+    end
   else
     erb :login
   end
@@ -161,16 +168,23 @@ end
 ##
 #	activities
 #
-get '/activity/*/@self/*' do
+get '/activity/*/@self/*', :agent => /^(.*)$/ do
+  id = params[:splat][0].to_s
+  activityid = params[:splat][1].to_s
   @contents = @client.get_content(APIbaseURL +
-    "/activities/" + params[:splat][0] + "/@self/", params[:splat][1],
+    "/activities/" + id + "/@self/" + activityid, 
     :alt => :json, :prettyprint => true)
 
-  erb :contents
+  if garakei(params[:agent][0]) then
+    erb :mobile_contents
+  else
+    erb :contents
+  end
 end
 
 get '/activities/' do
   @contents = @client.get_content(APIbaseURL + "/activities/@me/@consumption",
+    # :'max-results' => 2,
     :alt => :json, :prettyprint => true)
 
   erb :contents

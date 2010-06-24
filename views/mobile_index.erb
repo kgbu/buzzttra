@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<%
+  jsondata = JSON.parse(@contents)
+
+%>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Buzzttra - minimul Buzz client</title>
+<link rel="stylesheet" type="text/css" href="/buzztra/css/common.css" />
+</head>
+<body>
+  <form action="/buzztra/activities" method=post>
+Post:
+  <input type="text" name="body" >
+  <input type="submit" name="POST" value="POST your activity">
+  </form>
+<hr />
+<form id="searchForm" method="post" action="/buzztra/search">
+SEARCH:
+  <input type="text" name="q">
+  <input type="submit" name="SEARCH" value="Go">
+  </form>
+<hr />
+  <% jsondata["data"]["items"].each do |item| %>
+    <a href="<%= item["actor"]["profileUrl"] %>"><%= item["actor"]["name"] %></a> : <%= item["updated"] %>
+    <a href="http://www.jin.gr.jp/buzztra/activity/<%= item["actor"]["id"]%>/@self/<%= item["id"]%>"><%= item["title"] %></a><hr />
+  <% end %>
+</body>
+</html>

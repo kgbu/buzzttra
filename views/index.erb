@@ -9,15 +9,18 @@
 </head>
 <body>
 
-
 <div id="contentpane" class="widget"><h2>Contents</h2>
-  <dl id="buzzlist" style="display: none;"></dl>
-  <p id="progress" style="display: none;">Reading buzz&#8230;</p>
-</div>
+  <div id="gobackbutton" style="display: none;"></div>
 
-<form id="addForm" method="get" action="/buzztra/activities/">
-<p><input type="submit" value="Get buzz!" /></p>
-</form>
+    <dl id="buzzlist" style="display: none;"></dl>
+    <p id="progress" style="display: none;">Reading buzz&#8230;</p>
+
+  <div id="nextbutton">
+    <form id="addForm" method="get" action="/buzztra/activities/">
+      <p><input type="submit" value="Get buzz!" /></p>
+    </form>
+  <div>
+</div>
 
 <hr />
   <form id="searchForm" method="post" action="/buzztra/search">

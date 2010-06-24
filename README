@@ -6,28 +6,4 @@ MEMO:
 This code can run with Thin. See gem_list.txt
 
 TODO:
-See Issues on github. Below is just for memories.
-
--use Issues on github : CLOSED
-
--complete UI by prototype.js
---comment view
---add comment
---show user profile
---show user consum
-
--complete UI for GARAPAGOS KEITAI mobile device (w/o Javascript)
---store user identity data by request (do not store personal info, for usual cases)
---send one-time(5min TTL) auth-URL by mail
---give cookie session for auth-URL access
----add revoke process
-
--add geo-features
---search geo-neighborhood activities
---minor relocate on Google-map before posting
-
--Decide to use or not params[:_method] to emulate DELETE/PUT methods in order to realize RESTful URI design?
-  see "RESTful Web service" section 8.6.3, 8.15
-
--Get Android mobile device
-
+See Issues on github. 
